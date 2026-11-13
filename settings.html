@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Настройки таймера</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 18px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-size: 14px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      background: white;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #ff9a56;
+    }
+    textarea {
+      resize: none;
+      height: 50px;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+    .action-btn {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: white;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      border-color: #ff9a56;
+      background: #fff5f0;
+    }
+    .action-btn.selected {
+      border-color: #ff9a56;
+      background: linear-gradient(135deg, #ff9a56, #ff6b6b);
+      color: white;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    button.main-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-start {
+      background: linear-gradient(135deg, #ff9a56, #ff6b6b);
+      color: white;
+    }
+    .btn-start:hover {
+      background: linear-gradient(135deg, #ff8a46, #ff5b5b);
+    }
+    .btn-cancel {
+      background: #ddd;
+      color: #333;
+    }
+    .btn-cancel:hover {
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>⏱️ Свой таймер</h2>
+  
+  <div class="form-group">
+    <label for="minutes">Время (минуты):</label>
+    <input type="number" id="minutes" min="1" max="999" value="25" placeholder="25">
+  </div>
+  
+  <div class="form-group">
+    <label>Действие:</label>
+    <div class="actions">
+      <button type="button" class="action-btn" data-action="💧 Попить воды">💧 Попить воды</button>
+      <button type="button" class="action-btn" data-action="🧘 Размяться">🧘 Размяться</button>
+      <button type="button" class="action-btn" data-action="🪟 Посмотреть в окно">🪟 В окно</button>
+      <button type="button" class="action-btn" data-action="☕ Сделать перерыв">☕ Перерыв</button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="message">Или своё сообщение:</label>
+    <textarea id="message" placeholder="Пора отдохнуть!"></textarea>
+  </div>
+  
+  <div class="buttons">
+    <button class="main-btn btn-cancel" onclick="window.close()">Отмена</button>
+    <button class="main-btn btn-start" onclick="startTimer()">Запустить</button>
+  </div>
+
+  <script>
+    let selectedAction = '';
+
+    // Action buttons
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedAction = btn.dataset.action;
+        document.getElementById('message').value = '';
+      });
+    });
+
+    // Clear selection when typing custom message
+    document.getElementById('message').addEventListener('input', () => {
+      document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('selected'));
+      selectedAction = '';
+    });
+
+    function startTimer() {
+      const minutes = parseInt(document.getElementById('minutes').value) || 25;
+      const customMessage = document.getElementById('message').value;
+      const message = customMessage || selectedAction || 'Пора отдохнуть!';
+      const action = selectedAction; // Pass the selected action
+      window.electronAPI.startCustomTimer(minutes, message, action);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+        startTimer();
+      } else if (e.key === 'Escape') {
+        window.close();
+      }
+    });
+  </script>
+</body>
+</html>

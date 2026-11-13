@@ -1,0 +1,171 @@
+@font-face {
+  font-family: 'Min';
+  src: url('fonts/Min.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  -webkit-app-region: drag;
+}
+
+#cat {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 128px;
+  height: 128px;
+  background: url('assets/sleep.png') no-repeat;
+  background-size: 256px 256px;
+  background-position: 0 0;
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+  animation: sleep-sprite 1.6s steps(1) infinite;
+  image-rendering: pixelated;
+}
+
+/* Sleep animation */
+@keyframes sleep-sprite {
+  0% { background-position: 0 0; }
+  25% { background-position: -128px 0; }
+  50% { background-position: 0 -128px; }
+  75% { background-position: -128px -128px; }
+}
+
+/* Stretch state */
+#cat.stretching {
+  background-image: url('assets/Stretch.png');
+  animation: stretch-sprite 1.6s steps(1) infinite;
+}
+
+@keyframes stretch-sprite {
+  0% { background-position: 0 0; }
+  25% { background-position: -128px 0; }
+  50% { background-position: 0 -128px; }
+  75% { background-position: -128px -128px; }
+}
+
+/* Sit state */
+#cat.sitting {
+  background-image: url('assets/Sit.png');
+  animation: sit-sprite 1.6s steps(1) infinite;
+}
+
+@keyframes sit-sprite {
+  0% { background-position: 0 0; }
+  25% { background-position: -128px 0; }
+  50% { background-position: 0 -128px; }
+  75% { background-position: -128px -128px; }
+}
+
+/* Timer done state - sitting cat */
+#cat.timer-done {
+  background-image: url('assets/Sit.png');
+  animation: sit-sprite 1.6s steps(1) infinite;
+}
+
+/* Drinking state */
+#cat.drinking {
+  background-image: url('assets/milk.png');
+  background-size: 384px 256px;
+  animation: drink-sprite 2.4s steps(1) infinite;
+}
+
+@keyframes drink-sprite {
+  0% { background-position: 0 0; }
+  16.66% { background-position: -128px 0; }
+  33.33% { background-position: -256px 0; }
+  50% { background-position: 0 -128px; }
+  66.66% { background-position: -128px -128px; }
+  83.33% { background-position: -256px -128px; }
+}
+
+/* Message bubble */
+#message {
+  position: absolute;
+  bottom: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 15px;
+  font-family: 'Min', 'Segoe UI', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  max-width: 250px;
+  max-height: 80px;
+  overflow-y: auto;
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: center;
+  animation: bounce-message 0.5s ease-out, float 2s ease-in-out infinite;
+  -webkit-app-region: no-drag;
+}
+
+/* Custom scrollbar */
+#message::-webkit-scrollbar {
+  width: 4px;
+}
+
+#message::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#message::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+#message::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+#message::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid white;
+}
+
+#message.hidden {
+  display: none;
+}
+
+@keyframes bounce-message {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
